@@ -34,7 +34,7 @@ class OneMinFeed(webapp.RequestHandler):
     now = datetime.datetime.now()
     self.response.headers['Last-Modified'] = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
     # The feed will be changed after 1 minute, so do not cache it
-    expires=now + datetime.timedelta(minutes=1)
+    expires=now + datetime.timedelta(minutes=2)
     self.response.headers['Expires'] = expires.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
     # Etag will contain the current time
@@ -63,7 +63,7 @@ class FiveMinFeed(webapp.RequestHandler):
     now = datetime.datetime.now()
     self.response.headers['Last-Modified'] = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
     # The feed will be changed after 5 minute, so do not cache it
-    expires=now + datetime.timedelta(minutes=5)
+    expires=now + datetime.timedelta(minutes=10)
     self.response.headers['Expires'] = expires.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
     signature = hmac.new(settings.SECRET_TOKEN, entry).hexdigest()
@@ -111,7 +111,7 @@ class FiveMinFeedGenerate(webapp.RequestHandler):
 
     now = datetime.datetime.now()
     for e in range(0, settings.NUM_ENTRIES):
-        past = timedelta(minutes=e)
+        past = timedelta(minutes=(5*e))
         ts = (now - past).strftime("%Y-%m-%dT%H:%M:%SZ")
         f5m.add_item(title = ts,
                      pubdate = (now-past),
