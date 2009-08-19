@@ -16,14 +16,18 @@ class Index(webapp.RequestHandler):
     output = template.render(path, context)
     self.response.out.write(output)
 
+
+class Entries(webapp.RequestHandler):
+  def get(self, enum):
+    return self.response.out.write(u"entry" + enum)
+
+
 def main():
   application = webapp.WSGIApplication(
     [('/', Index),
-     ('/feed/1min/(.*)$', OneMinFeed),   # the 1min feed need a secret token
-     ('/feed/5min', FiveMinFeed), 
-     ('/gen/1min', OneMinFeedGenerate),
-     ('/gen/5min', FiveMinFeedGenerate),
-     ('/entry/(\d)$', Entries)], debug = True)
+     ('/feed/(1|5)(.*)$', Feed),   # the 1min feed need a secret token
+     ('/gen/(1|5)$', FeedGenerate),
+     ('/entry/(\d+)$', Entries)], debug = True)
   wsgiref.handlers.CGIHandler().run(application)
 
 if __name__ == "__main__":

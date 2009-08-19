@@ -17,11 +17,11 @@ handlers:
   static_files: static/robots.txt
   upload: static/robots.txt
 
-- url: /gen/1min
+- url: /gen/1
   script: main.py
   login: admin
 
-- url: /gen/5min
+- url: /gen/5
   script: main.py
   login: admin
 
