@@ -1,0 +1,7 @@
+cron:
+- description: 1min feed generation
+  url: /gen/1min
+  schedule: every 1 minutes
+- description: 5min feed generation
+  url: /gen/5min
+  schedule: every 5 minutes

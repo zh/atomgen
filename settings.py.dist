@@ -1,0 +1,5 @@
+SITE_URL = u"http://atomgen.appspot.com"
+HUB_URL = u"http://pubsubhubbub.appspot.com/"
+SECRET_TOKEN = u"SomeSecretToken"
+NUM_ENTRIES = 10
+DEBUG = False
