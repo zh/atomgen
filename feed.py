@@ -35,7 +35,8 @@ class Feed(webapp.RequestHandler):
     if self.request.headers.has_key('If-Modified-Since'):
       dt = self.request.headers.get('If-Modified-Since').split(';')[0]
       modsince = datetime.datetime.strptime(dt, "%a, %d %b %Y %H:%M:%S %Z")
-      if modsince >= lastmod:
+      # feed.latest_post_date() returning a float number of milliseconds! small correction
+      if (modsince + datetime.timedelta(seconds=1)) >= lastmod:
         self.error(304)
         return self.response.out.write("304 Not Modified")
   
