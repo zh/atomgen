@@ -8,6 +8,7 @@ from google.appengine.ext import webapp
 class Index(webapp.RequestHandler):
   def get(self):
     context = {
+        'site_url': settings.SITE_URL,
         'debug': settings.DEBUG,
     }
     # calculate the template path
