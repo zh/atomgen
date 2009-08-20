@@ -4,19 +4,44 @@
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>Atom Entries Generator</title>
+    <link rel="stylesheet" href="/css/common.css" type="text/css" media="all" charset="utf-8"/>
     <link rel="alternate" href="http://atomgen.appspot.com/feed/5min" type="application/atom+xml" />
 </head>
 <body>
 <div id="main">
   <div id="head">
-    Infinite Atom Entries Generator. Have two feeds, generating valid atom entries every 1 minute and every 5 minutes. The 1 minute feed is protected with a secret token in the end of the URL. The 5 minutes feed is available for everybody on URL:
+    <h1>Infinite Atom Entries Generator.</h1>
+    <p>
+    The application providing two feeds. First one generating Atom entries every
+    minute and the second one - every 5 minutes. 
+    The feeds can be used mostly for testing webhooks, pubsubhubbub etc.
+    </p>
+    <p>
+    The one minute feed is protected by a secret token in the end of the URL.
+    If your application is installed for example on URL <b>http://atomgen.appspot.com/</b> , 
+    the two feeds will be:
 <pre>
+http://atomgen.appspot.com/feed/1/YourSecretHere
 http://atomgen.appspot.com/feed/5
-</pre>	  
+</pre>
+    </p>
+    <p>
+    The application is currently deployed on Google AppEngine. You can use the
+    5 minutes feed for your tests - go to 
+    <a href=">http://pubsubhubbub.appspot.com/subscribe">http://pubsubhubbub.appspot.com/subscribe</a> 
+    and subscribe for the <b>http://atomgen.appspot.com/feed/5</b> topic. This will send 
+    to your subscribers a new Atom entry every 5 minutes.
+
+    There is also a FriendFeed group - <a href="http://friendfeed.com/atomgen">http://friendfeed.com/atomgen</a> , 
+    which is already subscribed to the 5 minutes feed. You can use it to gen notifications via IM etc.
+    </p>
+    <p>
+    <a href="http://validator.w3.org/feed/check.cgi?url=http%3A//atomgen.appspot.com/feed/5"><img src="/images/valid-atom.png" alt="[Valid Atom 1.0]" title="Validate my Atom 1.0 feed" /></a>    
+    </p>
   </div>
-</div>
+  </div>
 <div id="foot">
-   <p>This application was build by <a href="http://zhware.net/">Stoyan Zhekov</a>. The code can be found on <a href="http://github.com/zh/atomgen">GitHub</a>.</p>
+  <p>This application was build by <a href="http://zhware.net/">Stoyan Zhekov</a>. The code can be found on <a href="http://github.com/zh/atomgen">GitHub</a>.</p>
 </div>
 </body>
 </html>

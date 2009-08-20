@@ -64,7 +64,7 @@ class FeedGenerate(webapp.RequestHandler):
     feed = feedgen.Atom1Feed(
         title = interval + u" min atom entries generator",
         author_name = u"Atom Generator",
-        link = feed_url,
+        link = settings.SITE_URL + u"/",
         feed_url = feed_url,
         hub_url = settings.HUB_URL,
         description = u"Generate new entry every " + interval + " minutes.",
