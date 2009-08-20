@@ -1,4 +1,53 @@
-atomgen - Infinite Atom Entries Generator
-==========================================
+atomgen
+========
 
-Used mostly for testing webhooks, pubsubhubbub etc.
+Infinite Atom Entries Generator
+
+
+Overview
+---------
+
+The application providing two feeds. First one generating Atom entries every
+minute and the second one - every 5 minutes. 
+The feeds can be used mostly for testing webhooks, pubsubhubbub etc.
+
+The one minute feed is protected by a secret token in the end of the URL.
+If your application is installed for example on URL http://example.com/ , 
+the two feeds will be:
+
+  http://example.com/feed/1/YouSecretHere    (1min feed)
+  http://example.com/feed/5                  (5min feed)
+
+
+Usage
+------
+
+The application is currently deployed on Google AppEngine. You can use the
+5 minutes feed for your tests - go to http://pubsubhubbub.appspot.com/subscribe 
+and subscribe for the http://atomgen.appspot.com/feed/5 topic. This will send 
+to your subscribers a new Atom entry every 5 minutes.
+
+There is also a FriendFeed group - http://friendfeed.com/atomgen , which is already
+subscribed to the 5 minutes feed. You can use it to gen notifications via IM etc.
+
+
+Implementation details
+-----------------------
+
+The feeds have atom:link[@rel="hub"] element and the 5 minutes feed is pinging the
+hub on feed generation. By default the Google's reference implementation on URL
+http://pubsubhubbub.appspot.com/ is used. Your can change the hub with the
+HUB_URL option in the settings.py file.
+
+I tried to make the atom generator a good Internet cityzen by setting up the proper
+HTTP headers ('Last-Modified', 'ETag' etc.). 'Etag' header contains the ID of the
+last entry, cryptography signed, like suggested in 
+http://code.google.com/p/pubsubhubbub/wiki/PublisherEfficiency
+
+The current implementation does not use Google Datastore. Feeds are kept only in 
+the memcached object caching system.
+
+
+TODO
+-----
+- Return only new entries for clients asking with 'If-None-Match' header (ETag)

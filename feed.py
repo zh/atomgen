@@ -12,6 +12,9 @@ import feedgen
 
 logging.getLogger().setLevel(logging.DEBUG)
 
+# Set the proper headers and return 'application/atom+xml' response or error
+# interval can be 1 (1 minutes feed) or 5 (5 minutes feed)
+# the one minute feed is protected by a secret
 class Feed(webapp.RequestHandler):
   def get(self, interval, secret=None):
     # 1min and 5min feeds
@@ -27,21 +30,21 @@ class Feed(webapp.RequestHandler):
     if feed is None:
       self.error(404)
       return self.response.out.write('404 Not Found')
-    
+
+    lastmod = feed.latest_post_date()
     if self.request.headers.has_key('If-Modified-Since'):
       dt = self.request.headers.get('If-Modified-Since').split(';')[0]
       modsince = datetime.datetime.strptime(dt, "%a, %d %b %Y %H:%M:%S %Z")
-      if modsince >= feed.latest_post_date():
+      if modsince >= lastmod:
         self.error(304)
         return self.response.out.write("304 Not Modified")
   
-    now = datetime.datetime.now()
-    self.response.headers['Last-Modified'] = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
-    # The feed will be changed after 1 minute, so do not cache it
-    expires=now + datetime.timedelta(minutes=2*int(interval))
+    self.response.headers['Last-Modified'] = lastmod.strftime("%a, %d %b %Y %H:%M:%S GMT")
+    # The feed will be changed after 1 or 5 minutes, so do not cache it
+    expires=lastmod + datetime.timedelta(minutes=2*int(interval))
     self.response.headers['Expires'] = expires.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-    # Etag will contain the current time
+    # Etag will contain the ID of the last entry
     marker = memcache.get(u"myIter" + interval)
     if marker == None:
       memcache.set(u"myIter" + interval, "0")
@@ -54,6 +57,7 @@ class Feed(webapp.RequestHandler):
     return self.response.out.write(feed.writeString('UTF-8'))
 
 
+# Feeds generation. Cronjob-driven (cron.yaml), available only for the admins (app.yaml)
 class FeedGenerate(webapp.RequestHandler):
   def get(self, interval):
     feed_url = settings.SITE_URL + u"/feed/" + interval
